@@ -1,6 +1,9 @@
 module Utils
 
 using LinearAlgebra
+using Distributions
+using Random
+using DataFrames
 
 #=
     Identity function, i.e. 
@@ -51,6 +54,21 @@ function d_LS(predicted, target)
     return predicted - target
 end
 
+
+function he_init(in_features, out_features)
+    s = sqrt( 2 / in_features )
+    d = Normal(0, s)
+    return rand(d, out_features)
+end
+
+
+function splitdf(df, pct)
+    @assert 0 <= pct <= 1
+    ids = collect(axes(df, 1))
+    shuffle!(ids)
+    sel = ids .<= nrow(df) .* pct
+    return view(df, sel, :), view(df, .!sel, :)
+end
 
 
 end
